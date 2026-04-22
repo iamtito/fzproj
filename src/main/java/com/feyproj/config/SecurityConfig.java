@@ -23,25 +23,25 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails alice = User.builder()
-                .username("alice")
+        UserDetails fey = User.builder()
+                .username("fey")
                 .password(encoder.encode("password123"))
                 .roles("USER")
                 .build();
 
-        UserDetails bob = User.builder()
-                .username("bob")
+        UserDetails jasline = User.builder()
+                .username("jasline")
                 .password(encoder.encode("password123"))
                 .roles("USER")
                 .build();
 
-        UserDetails charlie = User.builder()
-                .username("charlie")
+        UserDetails kaylah = User.builder()
+                .username("kaylah")
                 .password(encoder.encode("password123"))
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(alice, bob, charlie);
+        return new InMemoryUserDetailsManager(fey, jasline, kaylah);
     }
 
     @Bean

@@ -8,6 +8,22 @@ A simple social media web application built with **Java Spring Boot**. Users can
 
 You need **Java** and **Maven** installed on your machine.
 
+### 0. Install Homebrew (macOS only — skip if already installed)
+
+Homebrew is the package manager used to install Java and Maven on macOS.
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+After it finishes, follow any instructions it prints about adding Homebrew to your PATH (usually one `echo` + `eval` command for Apple Silicon Macs). Then verify:
+
+```bash
+brew --version
+```
+
+---
+
 ### 1. Install Java (OpenJDK)
 
 **macOS (Homebrew):**
@@ -89,9 +105,9 @@ Log in with any of the following built-in accounts (no database required — eve
 
 | Username  | Password      |
 |-----------|---------------|
-| alice     | password123   |
-| bob       | password123   |
-| charlie   | password123   |
+| fey       | password123   |
+| jasline   | password123   |
+| kaylah    | password123   |
 
 > **Note:** All data (posts, likes, comments, profile edits) is stored in memory and resets when the server restarts.
 

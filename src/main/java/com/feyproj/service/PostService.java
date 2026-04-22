@@ -24,23 +24,23 @@ public class PostService {
     }
 
     private void seedProfiles() {
-        profiles.put("alice",   new UserProfile("alice",   "Alice Johnson",  "Hiker, reader, and coffee enthusiast. ☕🏔️", "#6C63FF"));
-        profiles.put("bob",     new UserProfile("bob",     "Bob Smith",      "Software engineer by day, gamer by night. 🎮💻", "#FF6584"));
-        profiles.put("charlie", new UserProfile("charlie", "Charlie Brown",  "Baker, bookworm, and lover of all things cozy. 📚🥧", "#43C6AC"));
+        profiles.put("fey",     new UserProfile("fey",     "Fey",     "Hiker, reader, and coffee enthusiast. ☕🏔️", "#6C63FF"));
+        profiles.put("jasline", new UserProfile("jasline", "Jasline", "Software engineer by day, gamer by night. 🎮💻", "#FF6584"));
+        profiles.put("kaylah",  new UserProfile("kaylah",  "Kaylah",  "Baker, bookworm, and lover of all things cozy. 📚🥧", "#43C6AC"));
     }
 
     private void seedPosts() {
-        addSeedPost("alice",
+        addSeedPost("fey",
                 "Just finished hiking the Blue Ridge Trail! The views were absolutely breathtaking. 🏔️ Nature therapy at its finest.", 8);
-        addSeedPost("bob",
+        addSeedPost("jasline",
                 "Hot take: tabs are better than spaces. Fight me. 😤 #DevLife #CodingDebates", 6);
-        addSeedPost("charlie",
+        addSeedPost("kaylah",
                 "Made my grandmother's apple pie recipe for the first time. It turned out amazing! 🥧 Some traditions are worth keeping alive.", 5);
-        addSeedPost("alice",
+        addSeedPost("fey",
                 "Reading \"Atomic Habits\" for the third time. Every read reveals something new. Highly recommend for anyone building better routines. 📚", 3);
-        addSeedPost("bob",
+        addSeedPost("jasline",
                 "Just deployed my first Spring Boot application to production. The feeling when it works on the first try is unmatched. 🚀 #SpringBoot #Java", 2);
-        addSeedPost("charlie",
+        addSeedPost("kaylah",
                 "Sunday morning coffee and a good book — life doesn't get much better than this ☕📖", 1);
     }
 
