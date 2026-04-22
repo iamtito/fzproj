@@ -1,0 +1,8 @@
+com/feyproj/controller/FeedController.class
+com/feyproj/controller/ProfileController.class
+com/feyproj/FeyProjApplication.class
+com/feyproj/model/Post.class
+com/feyproj/service/PostService.class
+com/feyproj/config/SecurityConfig.class
+com/feyproj/model/UserProfile.class
+com/feyproj/model/Comment.class

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeyProj — Feed</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="feed-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="logo-mark">✦</span>
+            <span>FeyProj</span>
+        </div>
+        <div class="navbar-user">
+            <div class="avatar avatar-sm"
+                 th:style="'background-color:' + ${avatarColor}"
+                 th:text="${avatarInitial}"></div>
+            <a class="nav-display-name" th:href="@{'/profile/' + ${currentUser}}"
+               th:text="${displayName}"></a>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <button type="submit" class="btn-logout">Sign out</button>
+            </form>
+        </div>
+    </nav>
+
+    <!-- Feed -->
+    <div class="feed-layout">
+        <main class="feed-main">
+
+                <!-- Create post card -->
+            <div class="post-card create-post-card">
+                <div class="post-header">
+                    <div class="avatar"
+                         th:style="'background-color:' + ${avatarColor}"
+                         th:text="${avatarInitial}"></div>
+                    <div class="post-meta">
+                        <span class="post-author" th:text="${displayName}"></span>
+                        <span class="post-time">Share something…</span>
+                    </div>
+                </div>
+                <form th:action="@{/feed/post}" method="post" class="create-post-form">
+                    <textarea name="content"
+                              class="create-post-input"
+                              placeholder="What's on your mind?"
+                              maxlength="1000"
+                              rows="3"
+                              required
+                              oninput="togglePostBtn(this)"></textarea>
+                    <div class="create-post-actions">
+                        <span class="char-count" id="charCount">0 / 1000</span>
+                        <button type="submit" class="btn btn-primary" id="postBtn" disabled>Post</button>
+                    </div>
+                </form>
+            </div>
+
+        <div th:each="post : ${posts}"
+                 class="post-card"
+                 th:id="'post-' + ${post.id}">
+
+                <!-- Post Header -->
+                <div class="post-header">
+                    <div class="avatar"
+                         th:style="'background-color:' + ${post.avatarColor}"
+                         th:text="${post.avatarInitial}"></div>
+                    <div class="post-meta">
+                        <a class="post-author" th:href="@{'/profile/' + ${post.author}}"
+                       th:text="${post.displayName}"></a>
+                        <span class="post-time" th:text="${post.timeAgo}"></span>
+                    </div>
+                </div>
+
+                <!-- Post Body -->
+                <div class="post-content">
+                    <p th:text="${post.content}"></p>
+                </div>
+
+                <!-- Stats row -->
+                <div class="post-stats"
+                     th:if="${post.likeCount > 0 or !post.comments.empty}">
+                    <span th:if="${post.likeCount > 0}" class="stat-likes">
+                        <span class="heart-icon">♥</span>
+                        <span th:text="${post.likeCount}"></span>
+                    </span>
+                    <span th:if="${!post.comments.empty}" class="stat-comments">
+                        <span th:text="${post.comments.size()}"></span>
+                        comment<span th:if="${post.comments.size() > 1}">s</span>
+                    </span>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="post-actions">
+                    <form th:action="@{'/feed/' + ${post.id} + '/like'}" method="post">
+                        <button type="submit"
+                                th:class="${post.isLikedBy(currentUser)} ? 'btn-action liked' : 'btn-action'">
+                            <span th:text="${post.isLikedBy(currentUser)} ? '♥ Liked' : '♡ Like'"></span>
+                        </button>
+                    </form>
+                    <button type="button" class="btn-action"
+                            th:onclick="'toggleComments(' + ${post.id} + ')'">
+                        💬 Comment
+                    </button>
+                </div>
+
+                <!-- Comments section -->
+                <div class="comments-section" th:id="'comments-' + ${post.id}">
+
+                    <div th:each="comment : ${post.comments}" class="comment">
+                        <div class="avatar avatar-sm"
+                             th:style="'background-color:' + ${comment.avatarColor}"
+                             th:text="${comment.avatarInitial}"></div>
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-author" th:text="${comment.displayName}"></span>
+                                <span class="comment-time" th:text="${comment.timeAgo}"></span>
+                            </div>
+                            <p class="comment-text" th:text="${comment.content}"></p>
+                        </div>
+                    </div>
+
+                    <!-- Write a comment -->
+                    <form th:action="@{'/feed/' + ${post.id} + '/comment'}" method="post"
+                          class="comment-form">
+                        <div class="avatar avatar-sm"
+                             th:style="'background-color:' + ${avatarColor}"
+                             th:text="${avatarInitial}"></div>
+                        <div class="comment-input-wrap">
+                            <input type="text" name="content"
+                                   placeholder="Write a comment…"
+                                   class="comment-input"
+                                   maxlength="500"
+                                   autocomplete="off">
+                            <button type="submit" class="btn-send" title="Post comment">&#10148;</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div><!-- end post-card -->
+
+            <p th:if="${posts.empty}" class="empty-feed">No posts yet. Check back later!</p>
+        </main>
+    </div>
+
+    <script>
+        function toggleComments(postId) {
+            const section = document.getElementById('comments-' + postId);
+            section.classList.toggle('open');
+            if (section.classList.contains('open')) {
+                section.querySelector('.comment-input')?.focus();
+            }
+        }
+
+        function togglePostBtn(textarea) {
+            const btn = document.getElementById('postBtn');
+            const counter = document.getElementById('charCount');
+            const len = textarea.value.trim().length;
+            btn.disabled = len === 0;
+            counter.textContent = textarea.value.length + ' / 1000';
+        }
+
+        // Auto-open comments for the post we just commented on
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#post-')) {
+                const postId = hash.replace('#post-', '');
+                const section = document.getElementById('comments-' + postId);
+                if (section) section.classList.add('open');
+                document.getElementById('post-' + postId)?.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeyProj — Sign In</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-logo">
+            <div class="logo-mark">✦</div>
+            <h1>FeyProj</h1>
+            <p>Connect with the world</p>
+        </div>
+
+        <div class="login-card">
+            <h2>Sign In</h2>
+
+            <div th:if="${param.error}" class="alert alert-error">
+                Invalid username or password. Please try again.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been signed out successfully.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username"
+                           placeholder="Enter your username" required autofocus autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"
+                           placeholder="Enter your password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+
+            <div class="login-hints">
+                <p>Demo accounts (all use <code>password123</code>):</p>
+                <div class="hint-users">
+                    <span class="hint-chip">alice</span>
+                    <span class="hint-chip">bob</span>
+                    <span class="hint-chip">charlie</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

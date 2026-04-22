@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile — FeyProj</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="feed-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="logo-mark">✦</span>
+            <a th:href="@{/feed}" style="text-decoration:none;color:inherit;">FeyProj</a>
+        </div>
+        <div class="navbar-user">
+            <div class="avatar avatar-sm"
+                 th:style="'background-color:' + ${avatarColor}"
+                 th:text="${avatarInitial}"></div>
+            <a class="nav-display-name" th:href="@{'/profile/' + ${currentUser}}"
+               th:text="${displayName}"></a>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <button type="submit" class="btn-logout">Sign out</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="feed-layout">
+        <a th:href="@{'/profile/' + ${currentUser}}" class="back-link">&#8592; Back to Profile</a>
+
+        <div class="post-card" style="padding: 1.5rem 1.25rem;">
+            <h2 style="margin-bottom:1.5rem;font-size:1.2rem;">Edit Profile</h2>
+
+            <!-- Live preview -->
+            <div class="edit-preview">
+                <div class="avatar avatar-xl" id="previewAvatar"
+                     th:style="'background-color:' + ${profile.avatarColor}"
+                     th:text="${profile.avatarInitial}"></div>
+                <div>
+                    <div class="profile-display-name" id="previewName"
+                         th:text="${profile.displayName}"></div>
+                    <div class="profile-username" th:text="'@' + ${profile.username}"></div>
+                </div>
+            </div>
+
+            <form th:action="@{/profile/edit}" method="post" id="editForm">
+
+                <!-- Display Name -->
+                <div class="form-group" style="margin-top:1.25rem;">
+                    <label for="displayName">Display Name</label>
+                    <input type="text" id="displayName" name="displayName"
+                           th:value="${profile.displayName}"
+                           maxlength="50" required
+                           oninput="updatePreviewName(this.value)">
+                </div>
+
+                <!-- Bio -->
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio"
+                              rows="3" maxlength="160"
+                              placeholder="Tell the world a little about yourself…"
+                              class="create-post-input"
+                              style="margin-top:0"
+                              th:text="${profile.bio}"></textarea>
+                    <span class="char-count" id="bioCount"
+                          th:text="${profile.bio != null ? #strings.length(profile.bio) : 0} + ' / 160'"></span>
+                </div>
+
+                <!-- Avatar Color -->
+                <div class="form-group">
+                    <label>Avatar Color</label>
+                    <div class="color-picker">
+                        <label th:each="color : ${ {'#6C63FF','#FF6584','#43C6AC','#F7971E','#2193b0','#11998e','#EE0979','#8E2DE2'} }"
+                               class="color-option">
+                            <input type="radio" name="avatarColor"
+                                   th:value="${color}"
+                                   th:checked="${color == profile.avatarColor}"
+                                   onchange="updatePreviewColor(this.value)">
+                            <span class="color-swatch" th:style="'background:' + ${color}"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="create-post-actions" style="margin-top:1.5rem;">
+                    <a th:href="@{'/profile/' + ${currentUser}}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function updatePreviewName(val) {
+            const el = document.getElementById('previewName');
+            if (el) el.textContent = val || '…';
+            const avatar = document.getElementById('previewAvatar');
+            if (avatar && val) avatar.textContent = val.charAt(0).toUpperCase();
+        }
+
+        function updatePreviewColor(color) {
+            const avatar = document.getElementById('previewAvatar');
+            if (avatar) avatar.style.backgroundColor = color;
+        }
+
+        // Bio char counter
+        const bioArea = document.getElementById('bio');
+        const bioCount = document.getElementById('bioCount');
+        if (bioArea && bioCount) {
+            bioArea.addEventListener('input', () => {
+                bioCount.textContent = bioArea.value.length + ' / 160';
+            });
+        }
+    </script>
+</body>
+</html>
